@@ -167,6 +167,7 @@
     <Compile Include="Data\StateCombinator\StateCombinator.cs" />
     <Compile Include="Data\Value\DiscreteValue.cs" />
     <Compile Include="Data\Value\IntensityValue.cs" />
+    <Compile Include="Data\Value\BitmapValue.cs" />
     <Compile Include="Data\Value\RGBValue.cs" />
     <Compile Include="Delegates\Delegates.cs" />
     <Compile Include="Execution\ContextCurrentEffectsFull.cs" />
@@ -226,8 +227,6 @@
     <Compile Include="Intent\IntentState.cs" />
     <Compile Include="Intent\LightingIntent.cs" />
     <Compile Include="Intent\PositionIntent.cs" />
-    <Compile Include="Intent\VideoIntentState.cs" />
-    <Compile Include="Intent\VideoIntent.cs" />
     <Compile Include="Intent\StaticIntent.cs" />
     <Compile Include="Intent\StaticIntentState.cs" />
     <Compile Include="Intent\StaticArrayIntent.cs" />
