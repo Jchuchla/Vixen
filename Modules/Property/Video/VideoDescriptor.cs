@@ -5,7 +5,7 @@ namespace VixenModules.Property.Video
 {
 	public class VideoDescriptor : PropertyModuleDescriptorBase
 	{
-		private Guid _typeId = new Guid("{26EBB496-DE40-4ABA-A1D4-D28A691D7E6D}");
+		public static Guid Id = new Guid("{26EBB496-DE40-4ABA-A1D4-D28A691D7E6D}");
 
 		public override string TypeName
 		{
@@ -14,15 +14,20 @@ namespace VixenModules.Property.Video
 
 		public override Guid TypeId
 		{
-			get { return _typeId; }
+			get { return Id; }
 		}
 
-		public override Type ModuleClass
+        public static Guid ModuleId
+        {
+            get { return Id; }
+        }
+
+        public override Type ModuleClass
 		{
 			get { return typeof (VideoModule); }
 		}
 
-		public override Type ModuleDataClass
+		public override Type ModuleStaticDataClass
 		{
 			get { return typeof (VideoData); }
 		}
