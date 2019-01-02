@@ -20,6 +20,15 @@ namespace VixenModules.Property.Video
 			_data.Height = 480;
 		}
 
+        public int Width
+        {
+            get => _data.Width;
+        }
+
+        public int Height
+        {
+            get => _data.Height; 
+        }
 		public override bool HasSetup
 		{
 			get { return true; }

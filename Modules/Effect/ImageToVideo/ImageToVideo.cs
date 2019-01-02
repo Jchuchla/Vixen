@@ -13,6 +13,7 @@ using Vixen.Sys.Attribute;
 using VixenModules.Effect.Effect;
 using VixenModules.EffectEditor.EffectDescriptorAttributes;
 using NLog;
+using VixenModules.Property.Video;
 
 namespace VixenModules.Effect.ImageToVideo
 {
@@ -103,21 +104,20 @@ namespace VixenModules.Effect.ImageToVideo
 	    private EffectIntents RenderNode(ElementNode node)
             {
             EffectIntents effectIntents = new EffectIntents();
-            StaticArrayIntent<BitmapValue> intent;
 
             foreach (ElementNode elementNode in node.GetLeafEnumerator())
-                {                    
-                    if (true)  //How to check if element has a video property?
+                {
+                    if (node.Properties.Contains(VideoDescriptor.ModuleId))  //check if element has a video property
                     {
-                        //Get the video size from the property.
-                        int width = 640;
-                        int height = 480;
+                        StaticArrayIntent<BitmapValue> intent;
+
+                        //Get the property for this node to use the size dimensions.
+                        VideoModule module = node?.Properties.Get(VideoDescriptor.ModuleId) as VideoModule;
                         //load the image file
                         //Create the intents
-                        intent = CreateBitmapIntent(LoadImage(width,height), TimeSpan);
+                        intent = CreateBitmapIntent(LoadImage(module.Width, module.Height), TimeSpan);
+                        effectIntents.AddIntentForElement(elementNode.Element.Id, intent, TimeSpan.Zero);
                     }
-                    //add the intents
-                    effectIntents.AddIntentForElement(elementNode.Element.Id, intent, TimeSpan.Zero);
                 }
                 return effectIntents;
             }
