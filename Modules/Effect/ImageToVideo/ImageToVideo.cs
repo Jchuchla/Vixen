@@ -109,10 +109,12 @@ namespace VixenModules.Effect.ImageToVideo
                 {                    
                     if (true)  //How to check if element has a video property?
                     {
+                        //Get the video size from the property.
+                        int width = 640;
+                        int height = 480;
                         //load the image file
                         //Create the intents
-                        TimeSpan duration = new TimeSpan(); //placeholder till i figure out how to get effect duration
-                        intent = CreateBitmapIntent(LoadImage(), duration);
+                        intent = CreateBitmapIntent(LoadImage(width,height), TimeSpan);
                     }
                     //add the intents
                     effectIntents.AddIntentForElement(elementNode.Element.Id, intent, TimeSpan.Zero);
@@ -159,7 +161,7 @@ namespace VixenModules.Effect.ImageToVideo
             return name;
         }
 
-        private Bitmap LoadImage()
+        private Bitmap LoadImage(int width,int height)
         {
             Image image = null;
             var filePath = Path.Combine(ImageToVideoDescriptor.ModulePath, FileName);
@@ -178,7 +180,7 @@ namespace VixenModules.Effect.ImageToVideo
                 Logging.Error("File is missing or invalid path. {0}", filePath);
                 FileName = "";       
             }
-            return new Bitmap(image);
+            return new Bitmap(image,width,height);
         }
     }
 }

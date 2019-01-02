@@ -82,9 +82,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Data.cs" />
-    <Compile Include="Descriptor.cs" />
-    <Compile Include="Module.cs" />
+    <Compile Include="VideoData.cs" />
+    <Compile Include="VideoDescriptor.cs" />
+    <Compile Include="VideoModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SetupForm.cs">
       <SubType>Form</SubType>

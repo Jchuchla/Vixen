@@ -3,7 +3,7 @@ using Vixen.Module.Property;
 
 namespace VixenModules.Property.Video
 {
-	public class Descriptor : PropertyModuleDescriptorBase
+	public class VideoDescriptor : PropertyModuleDescriptorBase
 	{
 		private Guid _typeId = new Guid("{26EBB496-DE40-4ABA-A1D4-D28A691D7E6D}");
 
@@ -24,7 +24,7 @@ namespace VixenModules.Property.Video
 
 		public override Type ModuleDataClass
 		{
-			get { return typeof (Data); }
+			get { return typeof (VideoData); }
 		}
 
 		public override string Author

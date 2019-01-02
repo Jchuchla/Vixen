@@ -4,7 +4,7 @@ using Vixen.Module;
 namespace VixenModules.Property.Video
 {
 	[DataContract]
-	public class Data : ModuleDataModelBase
+	public class VideoData : ModuleDataModelBase
 	{
 		[DataMember]
 		public int Width { get; set; }
@@ -14,7 +14,7 @@ namespace VixenModules.Property.Video
 
 		public override IModuleDataModel Clone()
 		{
-			return (Data) MemberwiseClone();
+			return (VideoData) MemberwiseClone();
 		}
 	}
 }

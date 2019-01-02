@@ -7,9 +7,14 @@ namespace VixenModules.Property.Video
 {
 	public class VideoModule : PropertyModuleInstanceBase
 	{
-		private Data _data;
+		private VideoData _data;
 
-		public override void SetDefaultValues()
+        public VideoModule()
+        {
+            _data = new VideoData();
+        }
+
+        public override void SetDefaultValues()
 		{
 			_data.Width = 640;
 			_data.Height = 480;
@@ -35,7 +40,7 @@ namespace VixenModules.Property.Video
 		public override IModuleDataModel ModuleData
 		{
 			get { return _data; }
-			set { _data = (Data) value; }
+			set { _data = (VideoData) value; }
 		}
 	}
 }
