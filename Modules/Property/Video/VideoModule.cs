@@ -16,9 +16,13 @@ namespace VixenModules.Property.Video
 
         public override void SetDefaultValues()
 		{
-			_data.Width = 640;
-			_data.Height = 480;
-		}
+            if (_data == null)
+            {
+                _data = new VideoData();
+                _data.Width = 640;
+                _data.Height = 480;
+            }
+        }
 
         public int Width
         {
