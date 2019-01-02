@@ -11,7 +11,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Jon Chuchla")]
 [assembly: AssemblyProduct("Video")]
-[assembly: AssemblyCopyright("Copyright © Jon Chuchla 2019")]
+[assembly: AssemblyCopyright("Copyright © 2019 Jon Chuchla")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
