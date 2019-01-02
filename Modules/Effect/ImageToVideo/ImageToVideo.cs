@@ -1,12 +1,18 @@
-﻿using System.IO;
+﻿using NSch;
+using System;
+using System.Drawing;
+using System.IO;
+using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using System.Threading;
 using Vixen.Attributes;
+using Vixen.Data.Value;
 using Vixen.Intent;
 using Vixen.Module;
 using Vixen.Sys;
 using Vixen.Sys.Attribute;
 using VixenModules.Effect.Effect;
 using VixenModules.EffectEditor.EffectDescriptorAttributes;
+using NLog;
 
 namespace VixenModules.Effect.ImageToVideo
 {
@@ -14,8 +20,9 @@ namespace VixenModules.Effect.ImageToVideo
 	{
 		private ImageToVideoData _data;
 		private EffectIntents _elementData = null;
+        private static NLog.Logger Logging = LogManager.GetCurrentClassLogger();
 
-		public ImageToVideo()
+        public ImageToVideo()
 		{
 			_data = new ImageToVideoData();
 		}
@@ -95,18 +102,38 @@ namespace VixenModules.Effect.ImageToVideo
         // not a element, will recursively descend until we render its elements.
 	    private EffectIntents RenderNode(ElementNode node)
             {
-                EffectIntents effectIntents = new EffectIntents();
-                foreach (ElementNode elementNode in node.GetLeafEnumerator())
-                {
-                    if (true)  //Change condition to check if element has a video property
+            EffectIntents effectIntents = new EffectIntents();
+            StaticArrayIntent<BitmapValue> intent;
+
+            foreach (ElementNode elementNode in node.GetLeafEnumerator())
+                {                    
+                    if (true)  //How to check if element has a video property?
                     {
-                        //Create the intents                    
+                        //load the image file
+                        //Create the intents
+                        TimeSpan duration = new TimeSpan(); //placeholder till i figure out how to get effect duration
+                        intent = CreateBitmapIntent(LoadImage(), duration);
                     }
                     //add the intents
-                    //effectIntents.AddIntentForElement(elementNode.Element.Id, intent, TimeSpan.Zero);
+                    effectIntents.AddIntentForElement(elementNode.Element.Id, intent, TimeSpan.Zero);
                 }
                 return effectIntents;
             }
+
+        // Probably should move this to IntentBuilder.cs
+        StaticArrayIntent<BitmapValue> CreateBitmapIntent(Bitmap image,TimeSpan duration)
+        {
+            var interval = VixenSystem.DefaultUpdateTimeSpan;
+            var intervals = (int)(duration.TotalMilliseconds / interval.TotalMilliseconds);
+            var values = new BitmapValue[intervals + 1];
+
+            for (int i = 0; i < intervals + 1; i++)
+            {
+                values[i] = new BitmapValue(image);
+            }
+
+            return new StaticArrayIntent<BitmapValue>(interval, values, duration);
+        }
 
         private string ConvertPath(string path)
             {
@@ -130,6 +157,28 @@ namespace VixenModules.Effect.ImageToVideo
                 File.Copy(path, destPath, true);
             }
             return name;
+        }
+
+        private Bitmap LoadImage()
+        {
+            Image image = null;
+            var filePath = Path.Combine(ImageToVideoDescriptor.ModulePath, FileName);
+            if (File.Exists(filePath))
+            {
+                using (var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+                {
+                    var ms = new MemoryStream();
+                    fs.CopyTo(ms);
+                    ms.Position = 0;
+                    image = Image.FromStream(ms);
+                }
+            }
+            else
+            {
+                Logging.Error("File is missing or invalid path. {0}", filePath);
+                FileName = "";       
+            }
+            return new Bitmap(image);
         }
     }
 }

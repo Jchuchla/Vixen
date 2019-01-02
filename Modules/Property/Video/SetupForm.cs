@@ -8,8 +8,6 @@ namespace VixenModules.Property.Video
 {
 	internal partial class SetupForm : BaseForm
 	{
-		private int _productRequired;
-
 		public SetupForm(int width, int height)
 		{
 			InitializeComponent();

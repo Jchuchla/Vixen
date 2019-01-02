@@ -88,6 +88,12 @@
     <Compile Include="ImageToVideoDescriptor.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="NLog">
+      <HintPath>..\..\..\packages\NLog.4.4.12\lib\net45\NLog.dll</HintPath>
+    </Reference>
+    <Reference Include="NSch">
+      <HintPath>..\..\..\Common\Libraries\NSch.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />

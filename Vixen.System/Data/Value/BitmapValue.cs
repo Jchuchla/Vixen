@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 
 namespace Vixen.Data.Value
 {
@@ -13,5 +14,5 @@ namespace Vixen.Data.Value
 		/// A System.Drawing.Bitmap object
 		/// </summary>
 		public Bitmap Image;
-	}
+    }
 }
