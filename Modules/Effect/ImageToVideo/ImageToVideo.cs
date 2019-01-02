@@ -32,7 +32,9 @@ namespace VixenModules.Effect.ImageToVideo
 		{
 		}
 
-		protected override void _PreRender(CancellationTokenSource tokenSource = null)
+        public override bool ForceGenerateVisualRepresentation { get { return true; } }
+
+        protected override void _PreRender(CancellationTokenSource tokenSource = null)
 		{
 			_elementData = new EffectIntents();
 			
@@ -106,13 +108,14 @@ namespace VixenModules.Effect.ImageToVideo
             EffectIntents effectIntents = new EffectIntents();
 
             foreach (ElementNode elementNode in node.GetLeafEnumerator())
-                {
-                    if (node.Properties.Contains(VideoDescriptor.ModuleId))  //check if element has a video property
+            {
+                bool containsVideoProperty = elementNode.Properties.Contains(VideoDescriptor.ModuleId);
+                    if (elementNode.Properties.Contains(VideoDescriptor.ModuleId))  //check if element has a video property
                     {
                         StaticArrayIntent<BitmapValue> intent;
 
                         //Get the property for this node to use the size dimensions.
-                        VideoModule module = node?.Properties.Get(VideoDescriptor.ModuleId) as VideoModule;
+                        VideoModule module = elementNode?.Properties.Get(VideoDescriptor.ModuleId) as VideoModule;
                         //load the image file
                         //Create the intents
                         intent = CreateBitmapIntent(LoadImage(module.Width, module.Height), TimeSpan);
@@ -181,6 +184,27 @@ namespace VixenModules.Effect.ImageToVideo
                 FileName = "";       
             }
             return new Bitmap(image,width,height);
+        }
+
+        public override void GenerateVisualRepresentation(Graphics g, Rectangle clipRectangle)
+        {
+            try
+            {
+                string effectDisplayText = "ImageGoesHere";
+
+                Font adjustedFont = Vixen.Common.Graphics.GetAdjustedFont(g, effectDisplayText, clipRectangle, "Vixen.Fonts.DigitalDream.ttf", 48);
+                using (var stringBrush = new SolidBrush(Color.White))
+                {
+                    using (var backgroundBrush = new SolidBrush(Color.DarkGray))
+                        { g.FillRectangle(backgroundBrush, clipRectangle); }
+                    g.DrawString(effectDisplayText, adjustedFont, stringBrush, clipRectangle.X + 2, 2);
+                }
+
+            }
+            catch (Exception e)
+            {
+                Logging.Error("Exception rendering the visualization for the ImageToVideo effect.", e);
+            }
         }
     }
 }

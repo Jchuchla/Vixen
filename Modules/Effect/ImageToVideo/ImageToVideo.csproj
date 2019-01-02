@@ -75,6 +75,7 @@
     <ProjectReference Include="..\..\Property\Video\Video.csproj">
       <Project>{26EBB496-DE40-4ABA-A1D4-D28A691D7E6D}</Project>
       <Name>Video</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Effect\Effect.csproj">
       <Project>{af76c902-a776-49c3-9019-d7cb0a53fb2f}</Project>
@@ -90,9 +91,11 @@
   <ItemGroup>
     <Reference Include="NLog">
       <HintPath>..\..\..\packages\NLog.4.4.12\lib\net45\NLog.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="NSch">
       <HintPath>..\..\..\Common\Libraries\NSch.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
