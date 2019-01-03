@@ -45,7 +45,7 @@ namespace VixenModules.Effect.ImageToVideo
 				if (node != null)
 				{
 					_elementData = RenderNode(node);
-					_elementData = IntentBuilder.ConvertToStaticArrayIntents(_elementData, TimeSpan, false);					
+					//_elementData = IntentBuilder.ConvertToStaticArrayIntents(_elementData, TimeSpan, false);					
 				}
 			}
 		}
@@ -109,20 +109,24 @@ namespace VixenModules.Effect.ImageToVideo
 
             foreach (ElementNode elementNode in node.GetLeafEnumerator())
             {
-                bool containsVideoProperty = elementNode.Properties.Contains(VideoDescriptor.ModuleId);
-                    if (elementNode.Properties.Contains(VideoDescriptor.ModuleId))  //check if element has a video property
-                    {
-                        StaticArrayIntent<BitmapValue> intent;
+                //bool containsVideoProperty = elementNode.Properties.Contains(VideoDescriptor.ModuleId);
+                if (elementNode.Properties.Contains(VideoDescriptor.ModuleId))  //check if element has a video property
+                {
+                    StaticArrayIntent<BitmapValue> intent;
 
-                        //Get the property for this node to use the size dimensions.
-                        VideoModule module = elementNode?.Properties.Get(VideoDescriptor.ModuleId) as VideoModule;
-                        //load the image file
-                        //Create the intents
-                        intent = CreateBitmapIntent(LoadImage(module.Width, module.Height), TimeSpan);
-                        effectIntents.AddIntentForElement(elementNode.Element.Id, intent, TimeSpan.Zero);
-                    }
+                    //Get the property for this node to use the size dimensions.
+                    VideoModule module = elementNode?.Properties.Get(VideoDescriptor.ModuleId) as VideoModule;
+                    //load the image file
+                    //Create the intents
+                    var image = LoadImage(module.Width, module.Height);
+
+					intent = CreateBitmapIntent(image, TimeSpan);
+					image.Dispose();
+                    effectIntents.AddIntentForElement(elementNode.Element.Id, intent, TimeSpan.Zero);
+
                 }
-                return effectIntents;
+            }
+            return effectIntents;
             }
 
         // Probably should move this to IntentBuilder.cs
@@ -134,7 +138,7 @@ namespace VixenModules.Effect.ImageToVideo
 
             for (int i = 0; i < intervals + 1; i++)
             {
-                values[i] = new BitmapValue(image);
+                values[i] = new BitmapValue(new Bitmap(image));
             }
 
             return new StaticArrayIntent<BitmapValue>(interval, values, duration);

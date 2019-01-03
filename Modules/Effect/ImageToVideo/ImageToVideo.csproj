@@ -73,7 +73,7 @@
       <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\Property\Video\Video.csproj">
-      <Project>{26EBB496-DE40-4ABA-A1D4-D28A691D7E6D}</Project>
+      <Project>{26ebb496-de40-4aba-a1d4-d28a691d7e6d}</Project>
       <Name>Video</Name>
       <Private>False</Private>
     </ProjectReference>
