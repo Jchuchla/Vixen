@@ -115,15 +115,13 @@ namespace VixenModules.Effect.ImageToVideo
                     StaticArrayIntent<BitmapValue> intent;
 
                     //Get the property for this node to use the size dimensions.
-                    VideoModule module = elementNode?.Properties.Get(VideoDescriptor.ModuleId) as VideoModule;
-                    //load the image file
-                    //Create the intents
-                    var image = LoadImage(module.Width, module.Height);
+                    VideoModule videoProperty = elementNode?.Properties.Get(VideoDescriptor.ModuleId) as VideoModule;
+                    //load the image file & Create the intents
+                    var image = LoadImage(videoProperty.Width, videoProperty.Height);
 
 					intent = CreateBitmapIntent(image, TimeSpan);
 					image.Dispose();
                     effectIntents.AddIntentForElement(elementNode.Element.Id, intent, TimeSpan.Zero);
-
                 }
             }
             return effectIntents;
@@ -194,7 +192,7 @@ namespace VixenModules.Effect.ImageToVideo
         {
             try
             {
-                string effectDisplayText = "ImageGoesHere";
+                string effectDisplayText = _data.FileName.ToString();
 
                 Font adjustedFont = Vixen.Common.Graphics.GetAdjustedFont(g, effectDisplayText, clipRectangle, "Vixen.Fonts.DigitalDream.ttf", 48);
                 using (var stringBrush = new SolidBrush(Color.White))
