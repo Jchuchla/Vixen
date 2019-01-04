@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Windows.Forms;
-using OpenTK;
-using OpenTK.Graphics.OpenGL;
 using Vixen.Sys;
 using Vixen.Sys.Instrumentation;
-using VixenModules.Preview.VideoPreview.OpenGL;
+using VixenModules.Preview.VideoPreview.WPF;
 using VixenModules.Preview.VixenPreview;
 
 namespace VixenModules.Preview.VideoPreview
@@ -38,57 +36,6 @@ namespace VixenModules.Preview.VideoPreview
 			}
 		}
 
-		public bool UseOpenGLRendering
-		{
-			get
-			{
-				if (GetDataModel().UseOpenGL)
-				{
-					var supported = SupportsOpenGLPreview();
-					if (!supported)
-					{
-						GetDataModel().UseOpenGL = false;
-					}
-				}
-
-				return GetDataModel().UseOpenGL;
-			}
-		}
-
-		internal static bool SupportsOpenGLPreview()
-		{
-			bool supported = false;
-			try
-			{
-				lock (OpenGlPreviewForm.ContextLock)
-				{
-					var control = new GLControl();
-					control.MakeCurrent();
-					var major = GL.GetInteger(GetPName.MajorVersion);
-					var minor = GL.GetInteger(GetPName.MinorVersion);
-					if (major > 3 || (major == 3 && minor >=3))
-					{
-						Logging.Info($"Open GL version supported!. {major}.{minor}");
-						supported = true;
-					}
-					else
-					{
-						Logging.Error($"Open GL version not supported. {major}.{minor}");
-					}
-
-					control.Context.MakeCurrent(null);
-					control.Dispose();
-				}
-			}
-			catch (Exception e)
-			{
-				Logging.Error(e, "An error occured testing for OpenGL support.");
-			}
-
-			return supported;
-
-		}
-
 		protected override Form Initialize()
 		{
 			SetupPreviewForm();
@@ -99,25 +46,16 @@ namespace VixenModules.Preview.VideoPreview
 		private void SetupPreviewForm()
 		{
 			lock (_formLock) {
-
-				if (!UseOpenGLRendering)
+				try
 				{
-					//_displayForm = new GDIPreviewForm(GetDataModel(), InstanceId);
+					_displayForm = new VideoPreviewWPFContainer(GetDataModel(), InstanceId);
 				}
-				else
+				catch (Exception ex)
 				{
-					try
-					{
-						_displayForm = new OpenGlPreviewForm(GetDataModel(), InstanceId);
-					}
-					catch (Exception ex)
-					{
 
-						Logging.Error(ex, "An error occured trying to create the OpenGL Preview.");
-					}
-					
+					Logging.Error(ex, "An error occured trying to create the Video Preview.");
 				}
-
+				
 				_displayForm.DisplayName = Name;
 				_displayForm.Setup();
 			}
@@ -126,7 +64,7 @@ namespace VixenModules.Preview.VideoPreview
 		private String _name;
 		public override string Name
 		{
-			get { return _name; }
+			get => _name;
 			set
 			{
 				_name = value;

@@ -85,34 +85,9 @@
       <Name>WPFCommon</Name>
       <Private>False</Private>
     </ProjectReference>
-    <ProjectReference Include="..\..\App\CustomPropEditor\CustomPropEditor.csproj">
-      <Project>{37fe2e42-50da-4973-88f7-072ba570f997}</Project>
-      <Name>CustomPropEditor</Name>
-      <Private>False</Private>
-    </ProjectReference>
     <ProjectReference Include="..\..\Property\Color\Color.csproj">
       <Project>{73068A83-B3B7-4A2C-923D-71C7886CD5E3}</Project>
       <Name>Color</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Common\FastPixel\FastPixel.csproj">
-      <Project>{4EA5025B-5FFC-4FF8-9001-D0F64655BFB6}</Project>
-      <Name>FastPixel</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Property\Location\Location.csproj">
-      <Project>{7d5d4be4-576a-4092-a3e2-1a6f27cdc213}</Project>
-      <Name>Location</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Property\Order\Order.csproj">
-      <Project>{a4254642-2965-469a-8fbd-b45f6edd651c}</Project>
-      <Name>Order</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Property\Orientation\Orientation.csproj">
-      <Project>{3bcd7307-c584-4770-bc60-4142ddc88c76}</Project>
-      <Name>Orientation</Name>
       <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\Property\Video\Video.csproj">
@@ -122,32 +97,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Catel.Core, Version=5.4.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Catel.Core.5.4.0\lib\net46\Catel.Core.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Catel.MVVM, Version=5.4.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Catel.MVVM.5.4.0\lib\net46\Catel.MVVM.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Microsoft.Expression.Interactions, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Expression.Blend.Sdk.WPF.1.0.1\lib\net45\Microsoft.Expression.Interactions.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Microsoft.WindowsAPICodePack.DirectX">
-      <HintPath>..\..\..\Common\Libraries\Microsoft.WindowsAPICodePack.DirectX.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\NLog.4.4.12\lib\net45\NLog.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="OpenTK">
-      <HintPath>..\..\..\Common\Libraries\OpenTK.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="OpenTK.GLControl">
-      <HintPath>..\..\..\Common\Libraries\OpenTK.GLControl.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="PresentationCore" />
@@ -155,52 +106,20 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Catel.MVVM.5.4.0\lib\net46\System.Windows.Interactivity.dll</HintPath>
-      <Private>True</Private>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="System.Xaml" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="WeifenLuo.WinFormsUI.Docking, Version=3.0.4.0, Culture=neutral, PublicKeyToken=5cded1a1a0a7b481, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\DockPanelSuite.3.0.4\lib\net40\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="WeifenLuo.WinFormsUI.Docking.ThemeVS2015, Version=3.0.4.0, Culture=neutral, PublicKeyToken=5cded1a1a0a7b481, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\DockPanelSuite.ThemeVS2015.3.0.4\lib\net40\WeifenLuo.WinFormsUI.Docking.ThemeVS2015.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="WindowsFormsIntegration" />
+    <Reference Include="WriteableBitmapEx.Wpf, Version=1.5.0.0, Culture=neutral, PublicKeyToken=50375ca6144f1c69, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\WriteableBitmapEx.1.5.1.0\lib\net40\WriteableBitmapEx.Wpf.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Dispatch\BitmapIntentHandler.cs" />
     <Compile Include="IDisplayForm.cs" />
-    <Compile Include="OpenGL\VideoImage.cs" />
-    <Compile Include="OpenGL\Camera.cs" />
-    <Compile Include="OpenGL\Constructs\GLUtility.cs" />
-    <Compile Include="OpenGL\Constructs\Shaders\GlslLexer.cs" />
-    <Compile Include="OpenGL\Constructs\Shaders\ParamType.cs" />
-    <Compile Include="OpenGL\Constructs\Shaders\ProgramParam.cs" />
-    <Compile Include="OpenGL\Constructs\Shaders\Shader.cs" />
-    <Compile Include="OpenGL\Constructs\Shaders\ShaderProgram.cs" />
-    <Compile Include="OpenGL\Constructs\Shaders\Texture.cs" />
-    <Compile Include="OpenGL\Constructs\Vertex\VBO.cs" />
-    <Compile Include="OpenGL\Drawable.cs" />
-    <Compile Include="OpenGL\Extensions\GlExtensions.cs" />
-    <Compile Include="OpenGL\OpenGLPreviewForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="OpenGL\OpenGLPreviewForm.Designer.cs">
-      <DependentUpon>OpenGLPreviewForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -213,9 +132,15 @@
     <Compile Include="VideoPreviewModuleInstance.Designer.cs">
       <DependentUpon>VideoPreviewModuleInstance.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="OpenGL\OpenGLPreviewForm.resx">
-      <DependentUpon>OpenGLPreviewForm.cs</DependentUpon>
-    </EmbeddedResource>
+    <Compile Include="WPF\VideoPreviewWPFContainer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WPF\VideoPreviewWPFContainer.Designer.cs">
+      <DependentUpon>VideoPreviewWPFContainer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WPF\View\ImageViewer.xaml.cs">
+      <DependentUpon>ImageViewer.xaml</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
@@ -223,6 +148,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="VideoPreviewModuleInstance.resx">
       <DependentUpon>VideoPreviewModuleInstance.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WPF\VideoPreviewWPFContainer.resx">
+      <DependentUpon>VideoPreviewWPFContainer.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -245,7 +173,12 @@
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Page Include="WPF\View\ImageViewer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
