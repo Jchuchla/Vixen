@@ -4,10 +4,9 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using Color = System.Drawing.Color;
 using Rectangle = System.Drawing.Rectangle;
 
-namespace VixenModules.Preview.VideoPreview.WPF.View
+namespace VixenModules.SmartController.VideoScreen.WPF.View
 {
 	/// <summary>
 	/// Interaction logic for ImageViewer.xaml
@@ -78,6 +77,7 @@ namespace VixenModules.Preview.VideoPreview.WPF.View
 					bmp.UnlockBits(data);
 				}
 			}
+			
 		}
 	}
 }
