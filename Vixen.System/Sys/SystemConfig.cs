@@ -157,7 +157,7 @@ namespace Vixen.Sys
 		{
 			return deviceIds.Select(x =>
 			                        _controllers.FirstOrDefault(y => y.Id == x) ??
-			                        //_smartControllers.FirstOrDefault(y => y.Id == x) ??
+			                        _smartControllers.FirstOrDefault(y => y.Id == x) ??
 			                        _previews.FirstOrDefault(y => y.Id == x)).Where(x => x != null);
 		}
 	}

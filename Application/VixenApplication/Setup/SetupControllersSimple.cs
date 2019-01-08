@@ -117,10 +117,6 @@ namespace VixenApplication.Setup
 
 			foreach (TreeNode node in controllerTree.SelectedTreeNodes) {
 				dynamic controller = node.Tag as IControllerDevice;
-				if (controller == null)
-				{
-					controller = node.Tag as ISmartControllerDevice;
-				}
 				int outputIndex = -1;
 
 				if (controller == null) {
@@ -129,12 +125,9 @@ namespace VixenApplication.Setup
 						controller = node.Parent.Tag as IControllerDevice;
 						if (controller == null)
 						{
-							controller = node.Parent.Tag as ISmartControllerDevice;
-							if (controller == null)
-							{
-								Logging.Error("node parent is not a controller: " + node.Name);
-							}
+							Logging.Error("node parent is not a controller: " + node.Name);
 						}
+						
 					}
 				}
 
