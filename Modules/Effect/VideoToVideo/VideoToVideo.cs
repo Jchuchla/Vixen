@@ -276,8 +276,9 @@ namespace VixenModules.Effect.VideoToVideo
                 // Height and Width needs to be evenly divisible to work or ffmpeg complains.
                 if (renderHeight % 2 != 0) renderHeight++;
                 if (renderWidth % 2 != 0) renderWidth++;
+                int frameRate = 1000 / (int)VixenSystem.DefaultUpdateTimeSpan.TotalMilliseconds;
                 converter.MakeScaledThumbNails(_tempFilePath, 0, TimeSpan.TotalSeconds,
-                    renderWidth, renderHeight, MaintainAspect, RotateVideo, cropVideo);
+                    renderWidth, renderHeight, MaintainAspect, RotateVideo, cropVideo,frameRate);
                 _moviePicturesFileList = Directory.GetFiles(_tempFilePath).OrderBy(f => f).ToList();
 
                 _videoFileDetected = true;
