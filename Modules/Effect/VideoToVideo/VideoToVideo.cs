@@ -51,6 +51,7 @@ namespace VixenModules.Effect.VideoToVideo
 
         public override bool ForceGenerateVisualRepresentation { get { return true; } }
 
+        //Is this actually used anywhere?  Can i remove it?
         protected void SetupRender()
         {
             //UpdateQualityAttribute();
@@ -168,7 +169,8 @@ namespace VixenModules.Effect.VideoToVideo
             {
                 var image = LoadImage(file, _frameSize);
                 values[valueIdx] = new BitmapValue(new Bitmap(image));               
-                image.Dispose();                
+                image.Dispose();
+                valueIdx++;
             }
             RemoveTempFiles();
             return new StaticArrayIntent<BitmapValue>(updateInterval, values, TimeSpan);
