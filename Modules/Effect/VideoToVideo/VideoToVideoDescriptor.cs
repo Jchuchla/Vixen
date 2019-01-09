@@ -19,7 +19,7 @@ namespace VixenModules.Effect.VideoToVideo
 
         public override string EffectName
 		{
-			get { return "Image to Video"; }
+			get { return "Video to Video"; }
 		}
 
 		public override EffectGroups EffectGroup

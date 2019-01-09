@@ -1,11 +1,9 @@
-﻿using NSch;
-using Common.Controls;
+﻿using Common.Controls;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using System.Threading;
 using System.Windows.Forms;
 using Vixen.Attributes;
@@ -17,7 +15,6 @@ using Vixen.Sys.Attribute;
 using VixenModules.Effect.Effect;
 using VixenModules.EffectEditor.EffectDescriptorAttributes;
 using NLog;
-using Vixen.Module.Property;
 using VixenModules.Property.Video;
 
 namespace VixenModules.Effect.VideoToVideo
@@ -103,10 +100,10 @@ namespace VixenModules.Effect.VideoToVideo
 		}
 
         [Value]
-        [ProviderCategory(@"Config", 2)]
+        [ProviderCategory(@"Video Configuration", 2)]
         [ProviderDisplayName(@"Filename")]
         [ProviderDescription(@"Filename")]
-        [PropertyEditor("ImagePathEditor")]
+        [PropertyEditor("VideoPathEditor")]
         [PropertyOrder(1)]
         public string FileName
         {
@@ -115,6 +112,8 @@ namespace VixenModules.Effect.VideoToVideo
             {
                 _data.FileName = ConvertPath(value);
                 IsDirty = true;
+                _getNewVideoInfo = true;
+                _processVideo = true;
                 OnPropertyChanged();
             }
         }
@@ -135,43 +134,44 @@ namespace VixenModules.Effect.VideoToVideo
 
         // renders the given node to the internal ElementData dictionary. If the given node is
         // not a element, will recursively descend until we render its elements.
-	    private EffectIntents RenderNode(ElementNode node)
+        private EffectIntents RenderNode(ElementNode node)
             {
             EffectIntents effectIntents = new EffectIntents();
 
             foreach (ElementNode elementNode in node.GetLeafEnumerator())
             {
-                Size elementVideoSize = getElementVideoSize(elementNode);
-                if (!elementVideoSize.IsEmpty)  //check if element has a video property
+                //Get the property for this node to use the size dimensions.
+                _frameSize = getElementVideoSize(elementNode);                
+                if (!_frameSize.IsEmpty)  //check if element has a video property
                 {
                     StaticArrayIntent<BitmapValue> intent;
 
-                    //Get the property for this node to use the size dimensions.
-                    VideoModule videoProperty = elementNode?.Properties.Get(VideoDescriptor.ModuleId) as VideoModule;
                     //load the Video file and create frame images 
-                    var image = LoadImage(elementVideoSize.Width, elementVideoSize.Height);
-                    //Create the intents REPLACE THIS SECTION
-                    intent = CreateBitmapIntent(image, TimeSpan);
-					image.Dispose();
+                    ProcessMovie(_frameSize);
+                    //Create the intents
+                    intent = CreateIntents();
+                    //Create Intent for node
                     effectIntents.AddIntentForElement(elementNode.Element.Id, intent, TimeSpan.Zero);
                 }
             }
             return effectIntents;
             }
 
-        // Probably should move this to IntentBuilder.cs
-        StaticArrayIntent<BitmapValue> CreateBitmapIntent(Bitmap image,TimeSpan duration)
+        StaticArrayIntent<BitmapValue> CreateIntents()
         {
-            var interval = VixenSystem.DefaultUpdateTimeSpan;
-            var intervals = (int)(duration.TotalMilliseconds / interval.TotalMilliseconds);
+            var updateInterval = VixenSystem.DefaultUpdateTimeSpan;
+            var intervals = (int)(TimeSpan.TotalMilliseconds / updateInterval.TotalMilliseconds);
             var values = new BitmapValue[intervals + 1];
+            var valueIdx = 0;
 
-            for (int i = 0; i < intervals + 1; i++)
+            foreach(string file in _moviePicturesFileList)
             {
-                values[i] = new BitmapValue(new Bitmap(image));
+                var image = LoadImage(file, _frameSize);
+                values[valueIdx] = new BitmapValue(new Bitmap(image));               
+                image.Dispose();                
             }
-
-            return new StaticArrayIntent<BitmapValue>(interval, values, duration);
+            RemoveTempFiles();
+            return new StaticArrayIntent<BitmapValue>(updateInterval, values, TimeSpan);
         }
 
         private string ConvertPath(string path)
@@ -198,13 +198,12 @@ namespace VixenModules.Effect.VideoToVideo
             return name;
         }
 
-        private Bitmap LoadImage(int width,int height)
+        private Bitmap LoadImage(string path, Size imageSize)
         {
             Image image = null;
-            var filePath = Path.Combine(VideoToVideoDescriptor.ModulePath, FileName);
-            if (File.Exists(filePath))
+            if (File.Exists(path))
             {
-                using (var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+                using (var fs = new FileStream(path, FileMode.Open, FileAccess.Read))
                 {
                     var ms = new MemoryStream();
                     fs.CopyTo(ms);
@@ -214,10 +213,10 @@ namespace VixenModules.Effect.VideoToVideo
             }
             else
             {
-                Logging.Error("File is missing or invalid path. {0}", filePath);
+                Logging.Error("File is missing or invalid path. {0}", path);
                 FileName = "";       
             }
-            return new Bitmap(image,width,height);
+            return new Bitmap(image,imageSize.Width,imageSize.Height);
         }
 
         private Size getElementVideoSize(ElementNode node)
@@ -261,8 +260,8 @@ namespace VixenModules.Effect.VideoToVideo
 
                 string cropVideo = "";
 
-                int _renderWidth = frameSize.Width;
-                int _renderHeight = frameSize.Height;
+                int renderWidth = frameSize.Width;
+                int renderHeight = frameSize.Height;
 
                 //Maybe Move these vars back to effect class level
                 //I put them in here just to make the copied code work with minimum mods
@@ -273,10 +272,10 @@ namespace VixenModules.Effect.VideoToVideo
                 ffmpeg.ffmpeg converter = new ffmpeg.ffmpeg(videoFilename);
                 _currentMovieImageNum = 0;
                 // Height and Width needs to be evenly divisible to work or ffmpeg complains.
-                if (_renderHeight % 2 != 0) _renderHeight++;
-                if (_renderWidth % 2 != 0) _renderWidth++;
+                if (renderHeight % 2 != 0) renderHeight++;
+                if (renderWidth % 2 != 0) renderWidth++;
                 converter.MakeScaledThumbNails(_tempFilePath, 0, TimeSpan.TotalSeconds,
-                    _renderWidth, _renderHeight, MaintainAspect, RotateVideo, cropVideo);
+                    renderWidth, renderHeight, MaintainAspect, RotateVideo, cropVideo);
                 _moviePicturesFileList = Directory.GetFiles(_tempFilePath).OrderBy(f => f).ToList();
 
                 _videoFileDetected = true;
