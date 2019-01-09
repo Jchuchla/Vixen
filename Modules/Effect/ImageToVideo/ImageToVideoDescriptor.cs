@@ -2,6 +2,7 @@
 using Vixen.Sys;
 using Vixen.Module.Effect;
 using Vixen.Sys.Attribute;
+using VixenModules.Effect.Effect;
 
 namespace VixenModules.Effect.ImageToVideo
 {
@@ -42,7 +43,12 @@ namespace VixenModules.Effect.ImageToVideo
 			get { return typeof (ImageToVideoData); }
 		}
 
-		public override string Author
+        public override bool SupportsFiles => true;
+
+        //Used when dragging files from Windows Explorer and will grab the appropiate file extensions to check.
+        public override string[] SupportedFileExtensions => StandardMediaExtensions.ImageExtensions;
+
+        public override string Author
 		{
 			get { return "Jon Chuchla"; }
 		}
