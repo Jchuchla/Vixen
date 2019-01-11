@@ -63,9 +63,13 @@ namespace VixenModules.Effect.Effect
 			{
 				ConfigureStringBuffer();
 			}
-			else
+			else if(TargetPositioning == TargetPositioningType.Locations)
 			{
 				ConfigureVirtualBuffer();
+			}
+			else
+			{
+				ConfigureVideoBuffer();
 			}
 			
 			SetupRender();
@@ -236,12 +240,9 @@ namespace VixenModules.Effect.Effect
 
 		protected override void TargetNodesChanged()
         {
-            CheckNodesForVideoProperty();
-            if (!_frameSize.IsEmpty)
+            if (CheckNodesForVideoProperty())
             {
                 TargetPositioning = TargetPositioningType.Video;
-                _bufferHt = _frameSize.Height;
-                _bufferWi = _frameSize.Width;
                 return;
             }
             if (TargetPositioning == TargetPositioningType.Strings)
@@ -257,6 +258,15 @@ namespace VixenModules.Effect.Effect
 			if (orientation.Item1)
 			{
 				StringOrientation = orientation.Item2;
+			}
+		}
+
+		private void ConfigureVideoBuffer()
+		{
+			if (!_frameSize.IsEmpty)
+			{
+				_bufferHt = _frameSize.Height;
+				_bufferWi = _frameSize.Width;
 			}
 		}
 
@@ -483,8 +493,13 @@ namespace VixenModules.Effect.Effect
             // set up array to hold the generated bitmaps
             BitmapValue[] frameArray = new BitmapValue[nFrames];
 
-            // generate all the pixels in the buffer
-            for (int frameNum = 0; frameNum < nFrames; frameNum++)
+	        FastPixel.FastPixel fastPixel = new FastPixel.FastPixel(_frameSize.Width, _frameSize.Height);
+	        fastPixel.Lock();
+			fastPixel.Clear(Color.Black);
+			fastPixel.Unlock(true);
+
+			// generate all the pixels in the buffer
+			for (int frameNum = 0; frameNum < nFrames; frameNum++)
             {
                 if (UseBaseColor)
                 {
@@ -498,25 +513,27 @@ namespace VixenModules.Effect.Effect
 
                 RenderEffect(frameNum, buffer);
 
-                FastPixel.FastPixel fastPixel = new FastPixel.FastPixel(_frameSize.Width,_frameSize.Height);
 
-                // peel off this frames pixels...
-                for (int y = 0; y < BufferHt; y++)
+	            fastPixel.Lock();
+				// peel off this frames pixels...
+				for (int y = 0; y < BufferHt; y++)
                 {
                     for (int x = 0; x < BufferWi; x++)
                     {
                         fastPixel.SetPixel(x,y,buffer.GetColorAt(x, y));
                     }
                 }                
-                frameArray[frameNum] = new BitmapValue(fastPixel.Bitmap);
-                fastPixel.Dispose();
-            }
 
+				fastPixel.Unlock(true);
+                frameArray[frameNum] = new BitmapValue(new Bitmap(fastPixel.Bitmap));
+               
+            }
+			fastPixel.Dispose();
             // create the intents
             //var frameTs = new TimeSpan(0, 0, 0, 0, FrameTime);
             //If used this way, substitute FrameTime in place of UpdateInterval below.
             IIntent intent = new StaticArrayIntent<BitmapValue>(updateInterval, frameArray, TimeSpan);
-            effectIntents.AddIntentForElement(node.Id, intent, startTime);
+            effectIntents.AddIntentForElement(node.Element.Id, intent, startTime);
 
             return effectIntents;
         }
@@ -670,20 +687,18 @@ namespace VixenModules.Effect.Effect
 			return newAngle;
         }
 
-        protected void CheckNodesForVideoProperty()
+        protected bool CheckNodesForVideoProperty()
         {
-            foreach (ElementNode elementNode in TargetNodes)
-            {                
-                //Get the property for this node to use the size dimensions.
-                _frameSize = getElementVideoSize(elementNode);
-            }
+            //Get the property for this node to use the size dimensions.
+            _frameSize = GetElementVideoSize(TargetNodes.FirstOrDefault());
+	        return !_frameSize.IsEmpty;
         }
 
-        protected Size getElementVideoSize(ElementNode node)
+        protected Size GetElementVideoSize(ElementNode node)
         {
-            if (node.Properties.Contains(VideoDescriptor.ModuleId))
+            if (node != null && node.Properties.Contains(VideoDescriptor.ModuleId))
             {
-                VideoModule videoProperty = node?.Properties.Get(VideoDescriptor.ModuleId) as VideoModule;
+                VideoModule videoProperty = node.Properties.Get(VideoDescriptor.ModuleId) as VideoModule;
                 return new Size(videoProperty.Width, videoProperty.Height);
             }
             return Size.Empty;
