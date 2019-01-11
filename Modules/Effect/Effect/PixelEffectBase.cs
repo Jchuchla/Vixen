@@ -486,7 +486,7 @@ namespace VixenModules.Effect.Effect
         {
             int nFrames = GetNumberFrames();
             if (nFrames <= 0 | BufferWi == 0 || BufferHt == 0) return new EffectIntents();
-            var buffer = new PixelFrameBuffer(BufferWi, BufferHt, UseBaseColor ? BaseColor : Color.Transparent);
+            var buffer = new PixelVideoFrameBuffer(BufferWi, BufferHt, UseBaseColor ? BaseColor : Color.Transparent);
             //int bufferSize = StringPixelCounts.Sum();
             var updateInterval = VixenSystem.DefaultUpdateTimeSpan;
             TimeSpan startTime = TimeSpan.Zero;
@@ -497,34 +497,22 @@ namespace VixenModules.Effect.Effect
 			// generate all the pixels in the buffer
 			for (int frameNum = 0; frameNum < nFrames; frameNum++)
             {
+				buffer.Reset();
+				buffer.BeginUpdates();
                 if (UseBaseColor)
                 {
                     var level = BaseLevelCurve.GetValue(GetEffectTimeIntervalPosition(frameNum) * 100) / 100;
                     buffer.ClearBuffer(level);
                 }
-                else
-                {
-                    buffer.ClearBuffer();
-                }
+				else
+				{
+					buffer.ClearBuffer();
+				}
 
-                RenderEffect(frameNum, buffer);
+				RenderEffect(frameNum, buffer);
 
-				var fp = new FastPixel.FastPixel(_frameSize.Width, _frameSize.Height);
-
-				fp.Lock();
-				// peel off this frames pixels...
-				for (int y = BufferHt-1; y >= 0; y--)
-                {
-                    for (int x = 0; x < BufferWi; x++)
-                    {
-                        fp.SetPixelWithAlpha(x,y,buffer.GetColorAt(x, _frameSize.Height -1 - y));
-                    }
-                }
-
-	            fp.Unlock(true);
-				
-				frameArray[frameNum] = new BitmapValue(fp.Bitmap);
-		
+				buffer.EndUpdates();
+				frameArray[frameNum] = new BitmapValue(buffer.Bitmap);
             }
 			
             // create the intents
