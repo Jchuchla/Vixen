@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Runtime.Remoting.Messaging;
 using System.Threading;
@@ -493,11 +494,6 @@ namespace VixenModules.Effect.Effect
             // set up array to hold the generated bitmaps
             BitmapValue[] frameArray = new BitmapValue[nFrames];
 
-	        FastPixel.FastPixel fastPixel = new FastPixel.FastPixel(_frameSize.Width, _frameSize.Height);
-	        fastPixel.Lock();
-			fastPixel.Clear(Color.Black);
-			fastPixel.Unlock(true);
-
 			// generate all the pixels in the buffer
 			for (int frameNum = 0; frameNum < nFrames; frameNum++)
             {
@@ -513,25 +509,24 @@ namespace VixenModules.Effect.Effect
 
                 RenderEffect(frameNum, buffer);
 
+				var fp = new FastPixel.FastPixel(_frameSize.Width, _frameSize.Height);
 
-	            fastPixel.Lock();
+				fp.Lock();
 				// peel off this frames pixels...
-				for (int y = 0; y < BufferHt; y++)
+				for (int y = BufferHt-1; y >= 0; y--)
                 {
                     for (int x = 0; x < BufferWi; x++)
                     {
-                        fastPixel.SetPixel(x,y,buffer.GetColorAt(x, y));
+                        fp.SetPixelWithAlpha(x,y,buffer.GetColorAt(x, _frameSize.Height -1 - y));
                     }
-                }                
+                }
 
-				fastPixel.Unlock(true);
-				Bitmap b = new Bitmap(fastPixel.Bitmap);
-	            b.RotateFlip(RotateFlipType.RotateNoneFlipY);
-
-				frameArray[frameNum] = new BitmapValue(b);
-               
+	            fp.Unlock(true);
+				
+				frameArray[frameNum] = new BitmapValue(fp.Bitmap);
+		
             }
-			fastPixel.Dispose();
+			
             // create the intents
             //var frameTs = new TimeSpan(0, 0, 0, 0, FrameTime);
             //If used this way, substitute FrameTime in place of UpdateInterval below.

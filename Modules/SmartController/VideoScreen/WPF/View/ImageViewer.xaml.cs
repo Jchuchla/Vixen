@@ -26,7 +26,7 @@ namespace VixenModules.SmartController.VideoScreen.WPF.View
 
 		public void Configure(int width, int height)
 		{
-			_writeableBitmap = new WriteableBitmap(width, height, 96, 96, PixelFormats.Pbgra32, null);
+			_writeableBitmap = new WriteableBitmap(width, height, 96, 96, PixelFormats.Bgra32, null);
 			Image.Source = _writeableBitmap;
 		}
 
