@@ -265,8 +265,8 @@ namespace VixenModules.Effect.Effect
 		{
 			if (!_frameSize.IsEmpty)
 			{
-				_bufferHt = _frameSize.Height;
-				_bufferWi = _frameSize.Width;
+				_bufferHt = _frameSize.Width;
+				_bufferWi = _frameSize.Height;
 			}
 		}
 
@@ -525,7 +525,10 @@ namespace VixenModules.Effect.Effect
                 }                
 
 				fastPixel.Unlock(true);
-                frameArray[frameNum] = new BitmapValue(new Bitmap(fastPixel.Bitmap));
+				Bitmap b = new Bitmap(fastPixel.Bitmap);
+	            b.RotateFlip(RotateFlipType.RotateNoneFlipY);
+
+				frameArray[frameNum] = new BitmapValue(b);
                
             }
 			fastPixel.Dispose();
