@@ -74,6 +74,7 @@
     <Compile Include="Location\SparseMatrix.cs" />
     <Compile Include="PixelEffectBase.cs" />
     <Compile Include="PixelFrameBuffer.cs" />
+    <Compile Include="PixelVideoFrameBuffer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StandardMediaExtensions.cs" />
     <Compile Include="StringOrientation.cs" />
