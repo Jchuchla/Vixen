@@ -32,8 +32,8 @@ namespace VixenModules.Effect.Effect
 		protected const short FrameTime = 50;
 		protected static Logger Logging = LogManager.GetCurrentClassLogger();
 		protected readonly List<int> StringPixelCounts = new List<int>();
-		protected List<ElementLocation> ElementLocations; 
-
+		protected List<ElementLocation> ElementLocations;
+        protected bool VideoElementDetected = false;
 		private EffectIntents _elementData;
 		private int _stringCount;
 		private int _maxPixelsPerString;
@@ -487,7 +487,6 @@ namespace VixenModules.Effect.Effect
             int nFrames = GetNumberFrames();
             if (nFrames <= 0 | BufferWi == 0 || BufferHt == 0) return new EffectIntents();
             var buffer = new PixelFrameBuffer(BufferWi, BufferHt, UseBaseColor ? BaseColor : Color.Transparent);
-            //int bufferSize = StringPixelCounts.Sum();
             var updateInterval = VixenSystem.DefaultUpdateTimeSpan;
             TimeSpan startTime = TimeSpan.Zero;
             
@@ -523,8 +522,7 @@ namespace VixenModules.Effect.Effect
 
 	            fp.Unlock(true);
 				
-				frameArray[frameNum] = new BitmapValue(fp.Bitmap);
-		
+				frameArray[frameNum] = new BitmapValue(fp.Bitmap);		
             }
 			
             // create the intents
@@ -689,7 +687,12 @@ namespace VixenModules.Effect.Effect
         {
             //Get the property for this node to use the size dimensions.
             _frameSize = GetElementVideoSize(TargetNodes.FirstOrDefault());
-	        return !_frameSize.IsEmpty;
+            VideoElementDetected = !FrameSize.IsEmpty;
+            SetBrowsable("TargetPositioning", FrameSize.IsEmpty);
+            SetBrowsable("Orientation", FrameSize.IsEmpty);
+            TypeDescriptor.Refresh(this);
+            if (TargetPositioning == TargetPositioningType.Video && FrameSize.IsEmpty) TargetPositioning = TargetPositioningType.Strings;
+            return !_frameSize.IsEmpty;
         }
 
         protected Size GetElementVideoSize(ElementNode node)
