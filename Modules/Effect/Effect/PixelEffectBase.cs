@@ -28,8 +28,7 @@ namespace VixenModules.Effect.Effect
 	/// </summary>
 	public abstract class PixelEffectBase : BaseEffect
     {
-        protected static TimeSpan UpdateInterval = VixenSystem.DefaultUpdateTimeSpan;
-        protected static short FrameTime = (short)UpdateInterval.TotalMilliseconds; //50;
+        protected static short FrameTime = (short)VixenSystem.DefaultUpdateTimeSpan.TotalMilliseconds; //50;
 		protected static Logger Logging = LogManager.GetCurrentClassLogger();
 		protected readonly List<int> StringPixelCounts = new List<int>();
 		protected List<ElementLocation> ElementLocations;
@@ -487,7 +486,6 @@ namespace VixenModules.Effect.Effect
             int nFrames = GetNumberFrames();
             if (nFrames <= 0 | BufferWi == 0 || BufferHt == 0) return new EffectIntents();
             var buffer = new PixelVideoFrameBuffer(BufferWi, BufferHt, UseBaseColor ? BaseColor : Color.Transparent);
-            //var updateInterval = VixenSystem.DefaultUpdateTimeSpan;
             TimeSpan startTime = TimeSpan.Zero;
             
             // set up array to hold the generated bitmaps
@@ -515,9 +513,7 @@ namespace VixenModules.Effect.Effect
             }
 			
             // create the intents
-            //var frameTs = new TimeSpan(0, 0, 0, 0, FrameTime);
-            //If used this way, substitute FrameTime in place of UpdateInterval below.
-            IIntent intent = new StaticArrayIntent<BitmapValue>(UpdateInterval, frameArray, TimeSpan);
+            IIntent intent = new StaticArrayIntent<BitmapValue>(VixenSystem.DefaultUpdateTimeSpan, frameArray, TimeSpan);
             effectIntents.AddIntentForElement(node.Element.Id, intent, startTime);
 
             return effectIntents;
